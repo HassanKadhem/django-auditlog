@@ -1,4 +1,5 @@
 import json
+from pytz import timezone
 
 from django import urls as urlresolvers
 from django.conf import settings
@@ -9,11 +10,12 @@ from django.utils.safestring import mark_safe
 from auditlog.models import LogEntry
 
 MAX = 75
+APP_TIME_ZONE = timezone(settings.TIME_ZONE)
 
 
 class LogEntryAdminMixin:
     def created(self, obj):
-        return obj.timestamp.strftime("%Y-%m-%d %H:%M:%S")
+        return obj.timestamp.astimezone(APP_TIME_ZONE).strftime("%Y-%m-%d %H:%M:%S")
 
     created.short_description = "Created"
 
